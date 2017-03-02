@@ -1,0 +1,4 @@
+[tasks.default]
+    links = [
+        [".config/nvim"]
+    ]
