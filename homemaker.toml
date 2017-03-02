@@ -1,4 +1,6 @@
 [tasks.default]
     links = [
-        [".config/nvim"]
+        [".config/nvim"],
+        [".xmonad"],
+        [".xmobarrc"]
     ]

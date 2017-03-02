@@ -1,0 +1,26 @@
+Config { font = "xft:sans-serif:size=9"
+       , additionalFonts = []
+       , borderColor = "#111"
+       , border = BottomB
+       , bgColor = "black"
+       , fgColor = "grey"
+       , alpha = 255
+       , position = Top
+       , textOffset = -1
+       , iconOffset = -1
+       , lowerOnStart = True
+       , pickBroadest = False
+       , persistent = False
+       , hideOnStart = False
+       , iconRoot = "."
+       , allDesktops = True
+       , overrideRedirect = True
+       , commands = [ 
+		Run StdinReader,
+		Run Date "%a %d %b %R" "date" 10
+       ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = " %StdinReader% }{ %date% "
+       }
+
