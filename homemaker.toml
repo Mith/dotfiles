@@ -2,5 +2,7 @@
     links = [
         [".config/nvim"],
         [".xmonad"],
-        [".xmobarrc"]
+        [".xmobarrc"],
+        [".gitconfig"],
+        [".gitignore_global]
     ]
