@@ -9,13 +9,15 @@ endif
 call plug#begin('~/.config/nvim/plugged')
 
 Plug 'chriskempson/base16-vim'
-Plug 'junegunn/fzf.vim'
+Plug 'Dkendal/fzy-vim'
 Plug 'airblade/vim-gitgutter'
-Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
+Plug 'tpope/vim-repeat'
+Plug 'easymotion/vim-easymotion'
 Plug 'w0rp/ale'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-surround'
 Plug 'mbbill/undotree'
 Plug 'hecal3/vim-leader-guide'
 Plug 'racer-rust/vim-racer'
@@ -62,6 +64,8 @@ set nobackup
 set nowb
 set noswapfile
 
+set showcmd
+
 set autoread
 
 set number
@@ -105,41 +109,17 @@ set laststatus=2
 "let mapleader="\<Space>"
 "
 map <SPACE> <Leader>
+map <SPACE><SPACE> <Leader><Leader>
 
-noremap <Leader>b :Buffers<CR>
-noremap <Leader>f :Files<CR>
+noremap <Leader>b :FzyBuffer<CR>
+noremap <Leader>f :FzyLsAg<CR>
 
-set statusline+=%F%m%r\ 
+set statusline=%F%m%r\ 
 set statusline+=%y[%{strlen(&fenc)?&fenc:'none'},
 set statusline+=%{&ff}]
 set statusline+=%#warningmsg#
 set statusline+=%*
 set statusline+=%=
 set statusline+=%l\:%c\ %P\ 
-
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_smart_case = 1
-
-let g:racer_cmd = "racer"
-let $RUST_SRC_PATH="/usr/local/src/rust"
-
-let g:grepper = {
-    \ 'tools': ['ag', 'git', 'grep'],
-    \ 'open': 0,
-    \ 'jump': 1,
-    \ }
-
-" Mapping selecting mappings
-nmap <leader><tab> <plug>(fzf-maps-n)
-xmap <leader><tab> <plug>(fzf-maps-x)
-omap <leader><tab> <plug>(fzf-maps-o)
-
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_ignore_case = 'ignorecase'
-let g:deoplete#auto_completion_start_length = 1
-let g:deoplete#enable_smart_case=1
-
-let g:deoplete#sources#rust#racer_binary='/Users/simon/.cargo/bin/racer'
-let g:deoplete#sources#rust#rust_source_path='/usr/local/src/rust/src'
 
 inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
