@@ -9,7 +9,7 @@ endif
 call plug#begin('~/.config/nvim/plugged')
 
 Plug 'chriskempson/base16-vim'
-Plug 'Dkendal/fzy-vim'
+Plug 'cloudhead/neovim-fuzzy'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-repeat'
 Plug 'easymotion/vim-easymotion'
@@ -111,8 +111,8 @@ set laststatus=2
 map <SPACE> <Leader>
 map <SPACE><SPACE> <Leader><Leader>
 
-noremap <Leader>b :FzyBuffer<CR>
-noremap <Leader>f :FzyLsAg<CR>
+noremap <Leader>b :FuzzyOpen<CR>
+noremap <Leader>f :FuzzyGrep<CR>
 
 set statusline=%F%m%r\ 
 set statusline+=%y[%{strlen(&fenc)?&fenc:'none'},
