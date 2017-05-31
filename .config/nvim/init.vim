@@ -77,6 +77,7 @@ set smartcase
 set hlsearch
 set incsearch
 set magic
+set inccommand=nosplit
 
 set showmatch
 
