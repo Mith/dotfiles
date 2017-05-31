@@ -54,8 +54,8 @@ set background=dark
 colorscheme base16-default-dark
 
 if executable('ag')
-	set grepprg=ag\ --nogroup\ --nocolor
-	let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+    set grepprg=ag\ --nogroup\ --nocolor
+    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 endif
 
 set encoding=utf8
@@ -100,7 +100,7 @@ set wildmode=longest:full,full
 "set omnifunc=syntaxcomplete#Complete
 
 if has('mouse')
-	set mouse=a
+    set mouse=a
 endif
 
 set laststatus=2
@@ -114,12 +114,12 @@ map <SPACE><SPACE> <Leader><Leader>
 noremap <Leader>b :FuzzyOpen<CR>
 noremap <Leader>f :FuzzyGrep<CR>
 
-set statusline=%F%m%r\ 
+set statusline=%F%m%r\
 set statusline+=%y[%{strlen(&fenc)?&fenc:'none'},
 set statusline+=%{&ff}]
 set statusline+=%#warningmsg#
 set statusline+=%*
 set statusline+=%=
-set statusline+=%l\:%c\ %P\ 
+set statusline+=%l\:%c\ %P\
 
 inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
