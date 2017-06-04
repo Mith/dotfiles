@@ -14,6 +14,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-repeat'
 Plug 'easymotion/vim-easymotion'
 Plug 'w0rp/ale'
+
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-commentary'
@@ -21,13 +22,22 @@ Plug 'tpope/vim-surround'
 Plug 'mbbill/undotree'
 Plug 'hecal3/vim-leader-guide'
 Plug 'racer-rust/vim-racer'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --tern-completer --racer-completer --clang-completer' }
 Plug 'Chiel92/vim-autoformat'
 Plug 'jceb/vim-orgmode'
 Plug 'tpope/vim-speeddating'
 Plug 'vim-scripts/nc.vim'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-vinegar'
+Plug 'Shougo/echodoc.vim'
+
+" Completion
+Plug 'roxma/nvim-completion-manager'
+" javascript completion
+Plug 'roxma/nvim-cm-tern',  {'do': 'npm install'}
+" language server protocol framework
+Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
+" vimscript
+Plug 'Shougo/neco-vim'
 
 " Org-mode
 Plug 'vim-scripts/utl.vim'
@@ -65,6 +75,7 @@ set nowb
 set noswapfile
 
 set showcmd
+set noshowmode
 
 set autoread
 
