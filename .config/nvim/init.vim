@@ -10,6 +10,7 @@ call plug#begin('~/.config/nvim/plugged')
 
 Plug 'chriskempson/base16-vim'
 Plug 'cloudhead/neovim-fuzzy'
+Plug 'junegunn/fzf'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-repeat'
 Plug 'easymotion/vim-easymotion'
@@ -23,12 +24,12 @@ Plug 'mbbill/undotree'
 Plug 'hecal3/vim-leader-guide'
 Plug 'racer-rust/vim-racer'
 Plug 'Chiel92/vim-autoformat'
-Plug 'jceb/vim-orgmode'
 Plug 'tpope/vim-speeddating'
 Plug 'vim-scripts/nc.vim'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-vinegar'
 Plug 'Shougo/echodoc.vim'
+Plug 'roxma/python-support.nvim'
 
 " Completion
 Plug 'roxma/nvim-completion-manager'
@@ -135,3 +136,25 @@ set statusline+=%=
 set statusline+=%l\:%c\ %P\
 
 inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+
+" for python completions
+let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'jedi')
+" language specific completions on markdown file
+let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'mistune')
+
+" utils, optional
+let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'psutil')
+let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'setproctitle')
+
+set hidden
+
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+    \ }
+
+" Automatically start language servers.
+let g:LanguageClient_autoStart = 1
+
+nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
