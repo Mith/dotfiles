@@ -9,8 +9,6 @@ endif
 call plug#begin('~/.config/nvim/plugged')
 
 Plug 'chriskempson/base16-vim'
-Plug 'cloudhead/neovim-fuzzy'
-Plug 'junegunn/fzf'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-repeat'
 Plug 'w0rp/ale'
@@ -28,15 +26,10 @@ Plug 'Shougo/echodoc.vim'
 Plug 'roxma/python-support.nvim'
 Plug 'tpope/vim-fugitive'
 
-" language server protocol framework
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
-" Completion
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-" vimscript
-Plug 'Shougo/neco-vim'
+Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
+
+Plug 'Shougo/denite.nvim'
+
 
 " Rust plugins
 Plug 'rust-lang/rust.vim'
@@ -114,8 +107,8 @@ set laststatus=2
 map <SPACE> <Leader>
 map <SPACE><SPACE> <Leader><Leader>
 
-noremap <Leader>b :FuzzyOpen<CR>
-noremap <Leader>f :FuzzyGrep<CR>
+noremap <Leader>b :Denite buffer<CR>
+noremap <Leader>f :Denite file/rec<CR>
 
 set statusline=%F%m%r\
 set statusline+=%y[%{strlen(&fenc)?&fenc:'none'},
@@ -138,16 +131,6 @@ let g:python_support_python3_requirements = add(get(g:,'python_support_python3_r
 
 set hidden
 
-let g:LanguageClient_serverCommands = {
-    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
-    \ 'javascript': ['javascript-typescript-stdio'],
-    \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
-    \ 'typescript': ['javascript-typescript-stdio'],
-    \ 'typescript.tsx': ['tcp://127.0.0.1:2089'],
-    \ }
-
-let g:deoplete#enable_at_startup = 1
-
 let g:ale_fixers = {
             \ 'typescript': ['tslint', 'prettier', 'eslint',
             \                'remove_trailing_lines', 
@@ -160,6 +143,9 @@ let g:ale_fixers = {
             \          'trim_whitespace'
             \         ]
             \}
+
+call denite#custom#var('file/rec', 'command',
+\ ['rg', '--files', '--glob', '!.git'])
 
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
