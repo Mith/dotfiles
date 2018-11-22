@@ -13,7 +13,6 @@ Plug 'cloudhead/neovim-fuzzy'
 Plug 'junegunn/fzf'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-repeat'
-Plug 'easymotion/vim-easymotion'
 Plug 'w0rp/ale'
 
 Plug 'sheerun/vim-polyglot'
@@ -21,35 +20,26 @@ Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'mbbill/undotree'
-Plug 'hecal3/vim-leader-guide'
-Plug 'racer-rust/vim-racer'
 Plug 'Chiel92/vim-autoformat'
-Plug 'tpope/vim-speeddating'
 Plug 'vim-scripts/nc.vim'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-vinegar'
 Plug 'Shougo/echodoc.vim'
 Plug 'roxma/python-support.nvim'
+Plug 'tpope/vim-fugitive'
 
-" Completion
-Plug 'roxma/nvim-completion-manager'
-" javascript completion
-Plug 'roxma/nvim-cm-tern',  {'do': 'npm install'}
 " language server protocol framework
-Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+" Completion
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 " vimscript
 Plug 'Shougo/neco-vim'
 
-" Org-mode
-Plug 'vim-scripts/utl.vim'
-
-" Latex plugins
-Plug 'lervag/vimtex'
-
 " Rust plugins
 Plug 'rust-lang/rust.vim'
-
-" JS/React
 
 call plug#end()
 
@@ -150,11 +140,30 @@ set hidden
 
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+    \ 'javascript': ['javascript-typescript-stdio'],
+    \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+    \ 'typescript': ['javascript-typescript-stdio'],
+    \ 'typescript.tsx': ['tcp://127.0.0.1:2089'],
     \ }
 
-" Automatically start language servers.
-let g:LanguageClient_autoStart = 1
+let g:deoplete#enable_at_startup = 1
 
-nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
-nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+let g:ale_fixers = {
+            \ 'typescript': ['tslint', 'prettier', 'eslint',
+            \                'remove_trailing_lines', 
+            \                'trim_whitespace'
+            \               ],
+            \ 'javascript': ['prettier', 'eslint'],
+            \ 'python': ['black'],
+            \ 'html': ['tidy', 
+            \          'remove_trailing_lines',
+            \          'trim_whitespace'
+            \         ]
+            \}
+
+nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+
+set diffopt+=vertical
