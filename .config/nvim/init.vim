@@ -47,11 +47,6 @@ endif
 set background=dark
 colorscheme base16-default-dark
 
-if executable('ag')
-    set grepprg=ag\ --nogroup\ --nocolor
-    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-endif
-
 set encoding=utf8
 
 set nobackup
@@ -93,24 +88,19 @@ set ruler
 set wildmenu
 set wildmode=longest:full,full
 
-"set omnifunc=syntaxcomplete#Complete
-
 if has('mouse')
     set mouse=a
 endif
 
 set laststatus=2
 
-"nnoremap <SPACE> <Nop>
-"let mapleader="\<Space>"
-"
 map <SPACE> <Leader>
 map <SPACE><SPACE> <Leader><Leader>
 
 noremap <Leader>b :Denite buffer<CR>
 noremap <Leader>f :Denite file/rec<CR>
 
-set statusline=%F%m%r\
+set statusline=%f%m%r\
 set statusline+=%y[%{strlen(&fenc)?&fenc:'none'},
 set statusline+=%{&ff}]
 set statusline+=%#warningmsg#
@@ -118,7 +108,18 @@ set statusline+=%*
 set statusline+=%=
 set statusline+=%l\:%c\ %P\
 
-inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
 
 " for python completions
 let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'jedi')
@@ -147,9 +148,10 @@ let g:ale_fixers = {
 call denite#custom#var('file/rec', 'command',
 \ ['rg', '--files', '--glob', '!.git'])
 
-nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 
 set diffopt+=vertical
