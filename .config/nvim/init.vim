@@ -11,25 +11,18 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'chriskempson/base16-vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-repeat'
-Plug 'w0rp/ale'
 
 Plug 'sheerun/vim-polyglot'
-Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'mbbill/undotree'
-Plug 'Chiel92/vim-autoformat'
 Plug 'vim-scripts/nc.vim'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-vinegar'
-Plug 'Shougo/echodoc.vim'
 Plug 'roxma/python-support.nvim'
 Plug 'tpope/vim-fugitive'
 
-Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
-
-Plug 'Shougo/denite.nvim'
-
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Rust plugins
 Plug 'rust-lang/rust.vim'
@@ -37,6 +30,9 @@ Plug 'rust-lang/rust.vim'
 call plug#end()
 
 filetype plugin indent on
+
+" Disable modeline
+set nomodeline
 
 set termguicolors
 
@@ -85,6 +81,8 @@ set softtabstop=4
 
 set ruler
 
+set completeopt-=preview
+
 set wildmenu
 set wildmode=longest:full,full
 
@@ -97,8 +95,9 @@ set laststatus=2
 map <SPACE> <Leader>
 map <SPACE><SPACE> <Leader><Leader>
 
-noremap <Leader>b :Denite buffer<CR>
-noremap <Leader>f :Denite file/rec<CR>
+noremap <Leader>b :CocList buffers<CR>
+noremap <Leader>f :CocList files<CR>
+noremap <Leader>g :CocList grep<CR>
 
 set statusline=%f%m%r\
 set statusline+=%y[%{strlen(&fenc)?&fenc:'none'},
@@ -132,22 +131,6 @@ let g:python_support_python3_requirements = add(get(g:,'python_support_python3_r
 
 set hidden
 
-let g:ale_fixers = {
-            \ 'typescript': ['tslint', 'prettier', 'eslint',
-            \                'remove_trailing_lines', 
-            \                'trim_whitespace'
-            \               ],
-            \ 'javascript': ['prettier', 'eslint'],
-            \ 'python': ['black'],
-            \ 'html': ['tidy', 
-            \          'remove_trailing_lines',
-            \          'trim_whitespace'
-            \         ]
-            \}
-
-call denite#custom#var('file/rec', 'command',
-\ ['rg', '--files', '--glob', '!.git'])
-
 " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
@@ -155,3 +138,5 @@ nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
 set diffopt+=vertical
+
+au TermOpen * setlocal nonumber norelativenumber
