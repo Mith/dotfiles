@@ -11,7 +11,6 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'chriskempson/base16-vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-repeat'
-
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
@@ -33,6 +32,7 @@ filetype plugin indent on
 
 " Disable modeline
 set nomodeline
+set hidden
 
 set termguicolors
 
@@ -46,7 +46,7 @@ colorscheme base16-default-dark
 set encoding=utf8
 
 set nobackup
-set nowb
+set nowritebackup
 set noswapfile
 
 set showcmd
@@ -56,6 +56,9 @@ set autoread
 
 set number
 set relativenumber
+
+" Disable linenumbers for terminal buffers
+au TermOpen * setlocal nonumber norelativenumber
 
 set ignorecase
 set smartcase
@@ -79,6 +82,8 @@ set smartindent
 set smarttab
 set softtabstop=4
 
+set breakindent
+
 set ruler
 
 set completeopt-=preview
@@ -99,13 +104,38 @@ noremap <Leader>b :CocList buffers<CR>
 noremap <Leader>f :CocList files<CR>
 noremap <Leader>g :CocList grep<CR>
 
-set statusline=%f%m%r\
+set statusline=%{coc#status()} 
+set statusline+=%f%m%r\
 set statusline+=%y[%{strlen(&fenc)?&fenc:'none'},
 set statusline+=%{&ff}]
 set statusline+=%#warningmsg#
 set statusline+=%*
 set statusline+=%=
 set statusline+=%l\:%c\ %P\
+
+set diffopt+=vertical
+
+""" Coc
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K for show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
@@ -120,16 +150,21 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-" for python completions
-let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'jedi')
-" language specific completions on markdown file
-let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'mistune')
+" Use <c-space> for trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
 
-" utils, optional
-let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'psutil')
-let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'setproctitle')
+" Use <cr> for confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
-set hidden
+" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+vmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap for do codeAction of current line
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Fix autofix problem of current line
+nmap <leader>qf  <Plug>(coc-fix-current)
 
 " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)

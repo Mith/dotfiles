@@ -7,7 +7,7 @@
 	editor = /usr/bin/vim
 	mergetool = vimdiff
 [push]
-	default = simple
+	default = current
 [log]
 	decorate = full
 [alias]
