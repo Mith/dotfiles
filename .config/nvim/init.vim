@@ -21,7 +21,10 @@ Plug 'tpope/vim-vinegar'
 Plug 'roxma/python-support.nvim'
 Plug 'tpope/vim-fugitive'
 
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
+Plug 'junegunn/fzf.vim'
+
+Plug 'neovim/nvim-lsp'
 
 " Rust plugins
 Plug 'rust-lang/rust.vim'
@@ -102,12 +105,7 @@ set diffopt+=vertical
 map <SPACE> <Leader>
 map <SPACE><SPACE> <Leader><Leader>
 
-noremap <Leader>b :CocList buffers<CR>
-noremap <Leader>f :CocList files<CR>
-noremap <Leader>g :CocList grep<CR>
-
-set statusline=%{coc#status()} 
-set statusline+=%f%m%r\
+set statusline=%f%m%r\
 set statusline+=%y[%{strlen(&fenc)?&fenc:'none'},
 set statusline+=%{&ff}]
 set statusline+=%#warningmsg#
@@ -117,73 +115,49 @@ set statusline+=%l\:%c\ %P\
 
 set diffopt+=vertical
 
-""" Coc
+""" LSP
+call nvim_lsp#setup("pyls", {})
+call nvim_lsp#setup("clangd", {})
+call nvim_lsp#setup("bashls", {})
+call nvim_lsp#setup("tsserver", {})
+
+autocmd Filetype python,c,cpp,sh,javascript,typescript setl omnifunc=lsp#omnifunc
 
 " Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+nnoremap <silent> gd :call lsp#text_document_definition()<CR>
+nnoremap <silent> gy :call lsp#text_document_type_definition()<CR>
+nnoremap <silent> gi :call lsp#text_document_implementation()<CR>
+nnoremap <silent> gr :call lsp#text_document_references()<CR>
 
-" Use K for show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
+" FZF
+let $FZF_DEFAULT_OPTS='--layout=reverse  --margin=1,2'
+let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
+function! FloatingFZF()
+  let buf = nvim_create_buf(v:false, v:true)
+  call setbufvar(buf, '&signcolumn', 'no')
+
+  let height = float2nr(20)
+  let width = float2nr(80)
+  let horizontal = float2nr((&columns - width) / 2)
+  let vertical = 5
+
+  let opts = {
+        \ 'relative': 'editor',
+        \ 'row': vertical,
+        \ 'col': horizontal,
+        \ 'width': width,
+        \ 'height': height,
+        \ 'style': 'minimal'
+        \ }
+
+  call nvim_open_win(buf, v:true, opts)
 endfunction
 
-" Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
+let g:fzf_buffers_jump = 1
 
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" Use <c-space> for trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
-
-" Use <cr> for confirm completion, `<C-g>u` means break undo chain at current position.
-" Coc only does snippet and additional edit on confirm.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-
-" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
-vmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-" Remap for do codeAction of current line
-nmap <leader>ac  <Plug>(coc-codeaction)
-" Fix autofix problem of current line
-nmap <leader>qf  <Plug>(coc-fix-current)
-
-" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Use K to show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
-
-nmap <leader>rn <Plug>(coc-rename)
+noremap <Leader>b :Buffers<CR>
+noremap <Leader>f :GFiles<CR>
+noremap <Leader>g :Rg<CR>
 
 au TermOpen * setlocal nonumber norelativenumber
