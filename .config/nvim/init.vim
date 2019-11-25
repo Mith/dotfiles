@@ -158,6 +158,7 @@ let g:fzf_buffers_jump = 1
 
 noremap <Leader>b :Buffers<CR>
 noremap <Leader>f :GFiles<CR>
+noremap <Leader>c :GFiles?<CR>
 noremap <Leader>g :Rg<CR>
 
 au TermOpen * setlocal nonumber norelativenumber
