@@ -39,10 +39,6 @@ set hidden
 
 set termguicolors
 
-if has("gui_running")
-    guifont Monaco:12
-endif
-
 set background=dark
 colorscheme base16-default-dark
 
@@ -116,21 +112,34 @@ set statusline+=%l\:%c\ %P\
 set diffopt+=vertical
 
 """ LSP
-call nvim_lsp#setup("pyls", {})
-call nvim_lsp#setup("clangd", {})
-call nvim_lsp#setup("bashls", {})
-call nvim_lsp#setup("tsserver", {})
+lua << EOF
+    local nvim_lsp = require'nvim_lsp'
 
-autocmd Filetype python,c,cpp,sh,javascript,typescript setl omnifunc=lsp#omnifunc
+    nvim_lsp.pyls.setup{}
+    nvim_lsp.clangd.setup{}
+    nvim_lsp.bashls.setup{}
+    nvim_lsp.tsserver.setup{}
+    nvim_lsp.omnisharp.setup{}
+    nvim_lsp.vimls.setup{}
+EOF
+
+autocmd Filetype python,c,cpp,cs,sh,javascript,typescript,vim setl omnifunc=v:lua.vim.lsp.omnifunc
 
 " Remap keys for gotos
-nnoremap <silent> gd :call lsp#text_document_definition()<CR>
-nnoremap <silent> gy :call lsp#text_document_type_definition()<CR>
-nnoremap <silent> gi :call lsp#text_document_implementation()<CR>
-nnoremap <silent> gr :call lsp#text_document_references()<CR>
+nnoremap <silent> gd <cmd>lua vim.lsp.buf.declaration()<CR>
+nnoremap <silent> gD <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> K <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> gi <cmd>lua vim.lsp.buf.implementation()<CR>
+nnoremap <silent> <Leader>h <cmd>lua vim.lsp.buf.signature_help()<CR>
+nnoremap <silent> <Leader>td <cmd>lua vim.lsp.buf.type_definition()<CR>
+nnoremap <silent> <Leader>r <cmd>lua vim.lsp.buf.rename()<CR>
+nnoremap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>
+
+nnoremap <Leader>d <cmd>lua vim.lsp.buf.peek_definition()<CR>
 
 " FZF
 let $FZF_DEFAULT_OPTS='--layout=reverse  --margin=1,2'
+let $FZF_FIND_FILE_COMMAND='fd --type f . \$dir'
 let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 
 function! FloatingFZF()
@@ -157,8 +166,10 @@ endfunction
 let g:fzf_buffers_jump = 1
 
 noremap <Leader>b :Buffers<CR>
-noremap <Leader>f :GFiles<CR>
+noremap <Leader>f :Files<CR>
 noremap <Leader>c :GFiles?<CR>
 noremap <Leader>g :Rg<CR>
+
+noremap <Leader><Leader> :GFiles<CR>
 
 au TermOpen * setlocal nonumber norelativenumber
