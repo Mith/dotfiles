@@ -20,6 +20,7 @@ Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-vinegar'
 Plug 'roxma/python-support.nvim'
 Plug 'tpope/vim-fugitive'
+Plug 'wellle/targets.vim'
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
@@ -71,7 +72,6 @@ set showmatch
 
 set noerrorbells
 set novisualbell
-set t_vb=
 set tm=500
 
 set autoindent
@@ -88,7 +88,7 @@ set ruler
 set completeopt-=preview
 
 set wildmenu
-set wildmode=longest:full,full
+set wildmode=full
 
 if has('mouse')
     set mouse=a
@@ -101,13 +101,11 @@ set diffopt+=vertical
 map <SPACE> <Leader>
 map <SPACE><SPACE> <Leader><Leader>
 
-set statusline=%f%m%r\
-set statusline+=%y[%{strlen(&fenc)?&fenc:'none'},
-set statusline+=%{&ff}]
+set statusline=%f\ %m%r%y
 set statusline+=%#warningmsg#
 set statusline+=%*
 set statusline+=%=
-set statusline+=%l\:%c\ %P\
+set statusline+=%l\:%c\ %P
 
 set diffopt+=vertical
 
@@ -119,11 +117,11 @@ lua << EOF
     nvim_lsp.clangd.setup{}
     nvim_lsp.bashls.setup{}
     nvim_lsp.tsserver.setup{}
-    nvim_lsp.omnisharp.setup{}
     nvim_lsp.vimls.setup{}
+    nvim_lsp.rust_analyzer.setup{}
 EOF
 
-autocmd Filetype python,c,cpp,cs,sh,javascript,typescript,vim setl omnifunc=v:lua.vim.lsp.omnifunc
+autocmd Filetype python,c,cpp,cs,sh,javascript,typescript,vim,rust setl omnifunc=v:lua.vim.lsp.omnifunc
 
 " Remap keys for gotos
 nnoremap <silent> gd <cmd>lua vim.lsp.buf.declaration()<CR>
@@ -134,7 +132,6 @@ nnoremap <silent> <Leader>h <cmd>lua vim.lsp.buf.signature_help()<CR>
 nnoremap <silent> <Leader>td <cmd>lua vim.lsp.buf.type_definition()<CR>
 nnoremap <silent> <Leader>r <cmd>lua vim.lsp.buf.rename()<CR>
 nnoremap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>
-
 nnoremap <Leader>d <cmd>lua vim.lsp.buf.peek_definition()<CR>
 
 " FZF
