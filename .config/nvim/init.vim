@@ -21,6 +21,7 @@ Plug 'tpope/vim-vinegar'
 Plug 'roxma/python-support.nvim'
 Plug 'tpope/vim-fugitive'
 Plug 'wellle/targets.vim'
+Plug 'justinmk/vim-sneak'
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
