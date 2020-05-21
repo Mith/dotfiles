@@ -173,7 +173,12 @@ let g:fzf_buffers_jump = 1
 
 noremap <Leader>b :Clap buffers<CR>
 noremap <Leader>f :Clap files<CR>
-noremap <Leader>c :Clap gfiles<CR>
+noremap <Leader>c :Clap git_diff_files<CR>
 noremap <Leader>g :Clap grep<CR>
+noremap <Leader>t :Clap tags<CR>
 
 noremap <Leader><Leader> :Clap gfiles<CR>
+
+let g:clap_insert_mode_only=v:true
+let g:clap_layout = { 'relative': 'editor' }
+let g:clap_prompt_format = '%provider_id%:'
