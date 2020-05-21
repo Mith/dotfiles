@@ -28,6 +28,8 @@ function! PackagerInit() abort
     call packager#add('junegunn/fzf', { 'do': {-> fzf#install()} })
     call packager#add('junegunn/fzf.vim')
 
+    call packager#add('liuchengxu/vim-clap', { 'do': ':Clap install-binary!' })
+
     call packager#add('neovim/nvim-lsp')
     call packager#add('haorenW1025/completion-nvim')
 
@@ -169,9 +171,9 @@ endfunction
 
 let g:fzf_buffers_jump = 1
 
-noremap <Leader>b :Buffers<CR>
-noremap <Leader>f :Files<CR>
-noremap <Leader>c :GFiles?<CR>
-noremap <Leader>g :Rg<CR>
+noremap <Leader>b :Clap buffers<CR>
+noremap <Leader>f :Clap files<CR>
+noremap <Leader>c :Clap gfiles<CR>
+noremap <Leader>g :Clap grep<CR>
 
-noremap <Leader><Leader> :GFiles<CR>
+noremap <Leader><Leader> :Clap gfiles<CR>
