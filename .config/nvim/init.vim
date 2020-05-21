@@ -1,39 +1,42 @@
 set shell=bash
 set nocompatible
 
-" auto-install vim-plug
-if empty(glob('~/.config/nvim/autoload/plug.vim'))
-    silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-    autocmd VimEnter * PlugInstall
-endif
-call plug#begin('~/.config/nvim/plugged')
+function! PackagerInit() abort
+    if empty(glob('~/.config/nvim/pack/packager/opt/vim-packager'))
+      silent !git clone https://github.com/kristijanhusak/vim-packager ~/.config/nvim/pack/packager/opt/vim-packager
+    endif
 
-Plug 'chriskempson/base16-vim'
-Plug 'airblade/vim-gitgutter'
-Plug 'tpope/vim-repeat'
-Plug 'sheerun/vim-polyglot'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-surround'
-Plug 'mbbill/undotree'
-Plug 'vim-scripts/nc.vim'
-Plug 'tpope/vim-sleuth'
-Plug 'tpope/vim-vinegar'
-Plug 'roxma/python-support.nvim'
-Plug 'tpope/vim-fugitive'
-Plug 'wellle/targets.vim'
-Plug 'justinmk/vim-sneak'
+    packadd vim-packager
+    call packager#init()
+    call packager#add('kristijanhusak/vim-packager', { 'type': 'opt' })
+    call packager#add('chriskempson/base16-vim')
+    call packager#add('airblade/vim-gitgutter')
+    call packager#add('tpope/vim-repeat')
+    call packager#add('sheerun/vim-polyglot')
+    call packager#add('tpope/vim-commentary')
+    call packager#add('tpope/vim-surround')
+    call packager#add('mbbill/undotree')
+    call packager#add('vim-scripts/nc.vim')
+    call packager#add('tpope/vim-sleuth')
+    call packager#add('tpope/vim-vinegar')
+    call packager#add('roxma/python-support.nvim')
+    call packager#add('tpope/vim-fugitive')
+    call packager#add('wellle/targets.vim')
+    call packager#add('justinmk/vim-sneak')
+    call packager#add('calviken/vim-gdscript3')
 
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
-Plug 'junegunn/fzf.vim'
+    call packager#add('junegunn/fzf', { 'do': {-> fzf#install()} })
+    call packager#add('junegunn/fzf.vim')
 
-Plug 'neovim/nvim-lsp'
+    call packager#add('neovim/nvim-lsp')
+    call packager#add('haorenW1025/completion-nvim')
 
-" Rust plugins
-Plug 'rust-lang/rust.vim'
+    " Rust plugins
+    call packager#add('rust-lang/rust.vim')
+endfunction
 
-call plug#end()
-
-filetype plugin indent on
+command! UpdatePackages call PackagerInit() | call packager#update()
+command! InstallPackages call PackagerInit() | call packager#install()
 
 " Disable modeline
 set nomodeline
@@ -86,8 +89,6 @@ set breakindent
 
 set ruler
 
-set completeopt-=preview
-
 set wildmenu
 set wildmode=full
 
@@ -109,31 +110,36 @@ set statusline+=%=
 set statusline+=%l\:%c\ %P
 
 set diffopt+=vertical
-
+packadd nvim-lsp
 """ LSP
 lua << EOF
     local nvim_lsp = require'nvim_lsp'
 
-    nvim_lsp.pyls.setup{}
-    nvim_lsp.clangd.setup{}
-    nvim_lsp.bashls.setup{}
-    nvim_lsp.tsserver.setup{}
-    nvim_lsp.vimls.setup{}
-    nvim_lsp.rust_analyzer.setup{}
+    local servers = {'rust_analyzer', 'tsserver', 'vimls', 'bashls', 'clangd'}
+    for _, lsp in ipairs(servers) do
+        nvim_lsp[lsp].setup {}
+    end
 EOF
 
-autocmd Filetype python,c,cpp,cs,sh,javascript,typescript,vim,rust setl omnifunc=v:lua.vim.lsp.omnifunc
+" Use completion-nvim in every buffer
+autocmd BufEnter * lua require'completion'.on_attach()
+
+" Set completeopt to have a better completion experience
+set completeopt=menuone,noinsert,noselect
+
+" Avoid showing message extra message when using completion
+set shortmess+=c
 
 " Remap keys for gotos
-nnoremap <silent> gd <cmd>lua vim.lsp.buf.declaration()<CR>
-nnoremap <silent> gD <cmd>lua vim.lsp.buf.definition()<CR>
-nnoremap <silent> K <cmd>lua vim.lsp.buf.hover()<CR>
-nnoremap <silent> gi <cmd>lua vim.lsp.buf.implementation()<CR>
-nnoremap <silent> <Leader>h <cmd>lua vim.lsp.buf.signature_help()<CR>
-nnoremap <silent> <Leader>td <cmd>lua vim.lsp.buf.type_definition()<CR>
-nnoremap <silent> <Leader>r <cmd>lua vim.lsp.buf.rename()<CR>
-nnoremap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>
-nnoremap <Leader>d <cmd>lua vim.lsp.buf.peek_definition()<CR>
+nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
+nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
+nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
+nnoremap <silent> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
+nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
+nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
+nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
 
 " FZF
 let $FZF_DEFAULT_OPTS='--layout=reverse  --margin=1,2'
@@ -169,5 +175,3 @@ noremap <Leader>c :GFiles?<CR>
 noremap <Leader>g :Rg<CR>
 
 noremap <Leader><Leader> :GFiles<CR>
-
-au TermOpen * setlocal nonumber norelativenumber
