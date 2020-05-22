@@ -117,7 +117,7 @@ packadd nvim-lsp
 lua << EOF
     local nvim_lsp = require'nvim_lsp'
 
-    local servers = {'rust_analyzer', 'tsserver', 'vimls', 'bashls', 'clangd'}
+    local servers = {'rust_analyzer', 'tsserver', 'vimls', 'bashls', 'clangd', 'jsonls', 'cssls'}
     for _, lsp in ipairs(servers) do
         nvim_lsp[lsp].setup {}
     end
