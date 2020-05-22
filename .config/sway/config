@@ -216,7 +216,7 @@ client.focused #444444 #444444 #eeeeee #444444 #000000
 client.focused_inactive #333333 #333333 #eeeeee #333333 #000000
 client.unfocused #333333 #000000 #eeeeee #333333 #000000
 
-hide_edge_borders smart
+hide_edge_borders both
 
 #
 # Status Bar:
