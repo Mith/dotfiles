@@ -6,4 +6,7 @@
         [".gitconfig"],
         [".gitignore_global"],
         [".config/fish"],
+        [".config/sway"],
+        [".config/swaylock"],
+        [".config/waybar"],
     ]
