@@ -1,1 +1,0 @@
-/home/simon/.config/fisherman/z/conf.d/z.fish
