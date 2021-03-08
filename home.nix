@@ -7,38 +7,49 @@
 		ripgrep
 		transmission-gtk
 		tldr
-		firefox
 		gimp
 		universal-ctags
 		signal-desktop
 		pulseeffects-pw
+		kitty
 	];
+
+	programs.firefox = {
+		enable = true;
+		enableGnomeExtensions = true;
+	};
 
 	programs.neovim = {
 		enable = true;
 		withNodeJs = true;
 		package = pkgs.neovim-nightly;
 		plugins = with pkgs.vimPlugins; [ 
-			coc-nvim 
-			coc-rust-analyzer 
 			polyglot 
 			sleuth 
 			base16-vim 
 			vim-commentary
 			vim-clap
-			coc-clap
 			vista-vim
 			vim-repeat
 			vim-surround
 			vim-vinegar
 			rust-vim
 			telescope-nvim
+			telescope-fzy-native-nvim
 			nvim-treesitter
 			nvim-treesitter-textobjects
+			nvim-dap
+			nvim-dap-virtual-text
+			plenary-nvim
+			popup-nvim
+			nvim-lspconfig
+			completion-nvim
 		];
 
-		extraConfig = builtins.readFile ./init.vim;
+		extraConfig = builtins.readFile ./nvim/init.vim;
 	};
+
+	xdg.configFile."nvim/lua".source = nvim/lua;
 
 	programs.git = {
 		enable = true;
