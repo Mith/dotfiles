@@ -18,6 +18,7 @@ set autoread
 
 set number
 set relativenumber
+set scrolloff=10
 
 " Disable linenumbers for terminal buffers
 au TermOpen * setlocal nonumber norelativenumber signcolumn=no
@@ -78,4 +79,8 @@ set completeopt=menuone,noinsert,noselect
 " Avoid showing message extra message when using completion
 set shortmess+=c
 
+" Use completion-nvim in every buffer
+autocmd BufEnter * lua require'completion'.on_attach()
+
 lua require('init')
+

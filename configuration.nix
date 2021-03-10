@@ -42,6 +42,7 @@
     keyMap = "dvorak";
   };
 
+
   services.xserver = {
     enable = true;
     exportConfiguration = true;
