@@ -1,16 +1,5 @@
 require'nvim-treesitter.configs'.setup {
-    ensure_installed = { 
-        "rust", 
-        "c", 
-        "c_sharp",
-        "cpp",
-        "nix",
-        "python",
-        "json",
-        "toml",
-        "lua",
-        "bash"
-    },
+    ensure_installed = "maintained",
     highlight = {
         enable = true
     },
@@ -46,14 +35,19 @@ dap.configurations.rust = {
         request = 'launch';
         name = "Launch file";
         cwd = '${workspaceFolder}';
-        program = function()
-            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-        end,
+        program = '${workspaceFolder}/target/debug/kloonorio';
         env = {
             CARGO_MANIFEST_DIR = '${workspaceFolder}';
         }
     },
 }
+
+vim.cmd [[
+    command! -complete=file -nargs=* DebugC lua require "my_debug".start_c_debugger({<f-args>}, "gdb")
+]]
+vim.cmd [[
+    command! -complete=file -nargs=* DebugRust lua require "my_debug".start_c_debugger({<f-args>}, "gdb", "rust-gdb")
+]]
 
 local nvim_lsp = require('lspconfig')
 local on_attach = function(client, bufnr)
@@ -107,9 +101,68 @@ end
 
 -- Use a loop to conveniently both setup defined servers 
 -- and map buffer local keybindings when the language server attaches
-local servers = { "rust_analyzer", }
+local servers = { "rust_analyzer", "clangd" }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
 
+local actions = require('telescope.actions')
+require('telescope').setup{
+    defaults = {
+        layout_strategy = 'flex';
+        mappings = {
+            i = {
+                ["<esc>"] = actions.close,
+            }
+        }
+    }
+}
 require('telescope').load_extension('fzy_native')
+require('telescope').load_extension('frecency')
+
+require'compe'.setup {
+  enabled = true;
+  source = {
+    path = true;
+    buffer = true;
+    nvim_lsp = true;
+    nvim_lua = true;
+    nvim_treesitter = true;
+  };
+}
+
+local lualine = require('lualine')
+lualine.options = {
+    theme = 'auto',
+    section_separators = nil,
+    component_separators = nil,
+    icons_enabled = true,
+}
+lualine.sections = {
+    lualine_a = { 'mode' },
+    lualine_b = { 'branch' },
+    lualine_c = { 'filename' },
+    lualine_x = { 
+        { 'diagnostics', 
+          sources = { 'nvim_lsp' }, 
+        }, 
+        'encoding', 
+        { 'fileformat', icons_enabled = false },
+        'filetype'
+    },
+    lualine_y = { 'progress' },
+    lualine_z = { 'location'  },
+}
+lualine.inactive_sections = {
+    lualine_a = {  },
+    lualine_b = {  },
+    lualine_c = { 'filename' },
+    lualine_x = { 
+        'encoding', 
+        { 'fileformat', icons_enabled = false },
+        'filetype' 
+    },
+    lualine_y = { 'progress' },
+    lualine_z = { 'location'  },
+}
+lualine.status()

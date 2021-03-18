@@ -65,22 +65,30 @@ set statusline+=%*
 set statusline+=%=
 set statusline+=%l\:%c\ %P
 
-command! ReloadConfig so ~/.config/nvim/init.vim
+command! ReloadConfig <cmd>so ~/.config/nvim/init.vim
 
 nnoremap <leader>f <cmd>Telescope find_files<cr>
 nnoremap <leader>g <cmd>Telescope live_grep<cr>
 nnoremap <leader>b <cmd>Telescope buffers<cr>
 nnoremap <leader>h <cmd>Telescope help_tags<cr>
 
-" For completion-nvim
-" Set completeopt to have a better completion experience
-set completeopt=menuone,noinsert,noselect
+inoremap <silent><expr> <C-Space> compe#complete()
+inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+
+nnoremap <leader>dc <cmd>lua require('dap').continue()<CR>
+nnoremap <leader>db <cmd>lua require('dap').toggle_breakpoint()<CR>
+nnoremap <leader>do <cmd>lua require('dap').step_over()<CR>
+nnoremap <leader>dh <cmd>lua require('dap').goto()<CR>
+nnoremap <leader>dk <cmd>lua require('dap.ui.variables').hover()<CR>
+
+
+" for nvim-compe
+set completeopt=menuone,noselect
 
 " Avoid showing message extra message when using completion
 set shortmess+=c
 
-" Use completion-nvim in every buffer
-autocmd BufEnter * lua require'completion'.on_attach()
-
 lua require('init')
-

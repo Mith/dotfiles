@@ -9,11 +9,16 @@
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
-
     
   # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader = {
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
+  };
+
+  boot.plymouth.enable = true;
+
+  hardware.cpu.intel.updateMicrocode = true;
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
   boot.kernelParams = [ "zswap.enabled=1" ];
@@ -40,20 +45,18 @@
   console = {
     font = "Lat2-Terminus16";
     keyMap = "dvorak";
+    earlySetup = true;
   };
-
 
   services.xserver = {
     enable = true;
     exportConfiguration = true;
     layout = "us";
     xkbVariant = "dvorak";
-    xkbOptions = "eurosign:e";
     displayManager.gdm.enable = true;
     desktopManager.gnome3.enable = true;
   };
 
-  services.gnome3.chrome-gnome-shell.enable = true;
   # Enable CUPS to print documents.
   # services.printing.enable = true;
 
@@ -75,9 +78,7 @@
   services.tailscale.enable = true;
 
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
-
+  services.geoclue2.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.simon = {
@@ -121,8 +122,10 @@
     gnomeExtensions.system-monitor
   ];
 
-  hardware.opengl.enable = true;
-  hardware.opengl.driSupport32Bit = true;
+  hardware.opengl = {
+    enable = true;
+    driSupport32Bit = true;
+  };
 
   fonts.fonts = with pkgs; [
     corefonts
@@ -133,32 +136,28 @@
 
   virtualisation.podman.enable = true;
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
   programs.steam.enable = true;
+  programs.sway = {
+    enable = true;
+    wrapperFeatures.gtk = true;
+  };
 
   nixpkgs.config.allowUnfree = true;
 
-  # nix.package = nixpkgs.nixUnstable;
-  # nix.package = pkgs.nixFlakes;
-  # nix.extraOptions = ''
-  #   experimental-features = nix-command flakes
-  # '';
   nix = {
    package = pkgs.nixFlakes;
-   extraOptions = "experimental-features = nix-command flakes";
+   extraOptions = ''
+     experimental-features = nix-command flakes
+     keep-outputs = true
+     keep-derivations = true
+   '';
+   autoOptimiseStore = true;
+   gc = {
+     automatic = true;
+     dates = "daily";
+     options = "--delete-older-than 30d";
    };
+ };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
@@ -170,7 +169,9 @@
     enable = true;
     flake = "/home/simon/src/dotfiles";
     flags = [
-      "--update-input" "nixpkgs" "--commit-lock-file"
+      "--update-input" "nixpkgs"
+      "--update-input" "home-manager"
+      "--update-input" "neovim-nightly-overlay"
     ];
   };
 
