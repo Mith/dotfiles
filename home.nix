@@ -14,11 +14,11 @@
 		kitty
 		nerdfonts
 		gnome-mpv
+		neuron-notes
 
 		swaylock
 		swayidle
 		wl-clipboard
-		alacritty # Alacritty is the default terminal in the config
 		flashfocus
 	];
 
@@ -46,8 +46,8 @@
 			telescope-fzy-native-nvim
 			telescope-frecency-nvim
 			sql-nvim
-			nvim-treesitter
-			nvim-treesitter-textobjects
+			# nvim-treesitter lib mismatch
+			# nvim-treesitter-textobjects
 			nvim-dap
 			nvim-dap-virtual-text
 			plenary-nvim
@@ -55,7 +55,10 @@
 			nvim-lspconfig
 			nvim-compe
 			lsp-status-nvim
+			nvim-web-devicons
 			lualine-nvim
+			auto-session
+			pkgs.neuron-nvim
 		];
 
 		extraConfig = builtins.readFile ./nvim/init.vim;
@@ -374,4 +377,14 @@
 		provider = "geoclue2";
 	};
 	programs.mako.enable = true;
+
+	systemd.user.services.neuron = let
+		notesDir = "/home/simon/notes";
+		in {
+			Unit.Description = "Neuron zettelkasten service";
+			Install.WantedBy = [ "graphical-session.target" ];
+			Service = {
+				ExecStart = "${pkgs.neuron-notes}/bin/neuron -d ${notesDir} gen -wS";
+			};
+		};
 }

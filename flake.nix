@@ -9,19 +9,39 @@
       url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # neovim-nightly.url = "github:neovim/neovim?dir=contrib";
+    neuron-notes-git = {
+      url = "github:srid/neuron";
+      flake = false;
+    };
 
+    neuron-nvim = {
+      url = "github:oberblastmeister/neuron.nvim/unstable";
+      flake = false;
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, neovim-nightly-overlay, ... }:
-    {
+  outputs = { self, nixpkgs, ... }@inputs: {
       nixosConfigurations.simon-nixos = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
           ./configuration.nix
-          home-manager.nixosModules.home-manager
+          inputs.home-manager.nixosModules.home-manager
           {
-            nixpkgs.overlays = [ neovim-nightly-overlay.overlay ];
+            nixpkgs.overlays = [
+              inputs.neovim-nightly-overlay.overlay
+              (final: prev: {
+                neuron-notes =
+                  (prev.callPackage "${inputs.neuron-notes-git}/project.nix"
+                    { }).neuron;
+              })
+              (final: prev: {
+                neuron-nvim = prev.vimUtils.buildVimPlugin {
+                  name = "neuron-nvim";
+                  src = inputs.neuron-nvim;
+                  dontBuild = true;
+                };
+              })
+            ];
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.simon = import ./home.nix;

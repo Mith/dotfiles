@@ -54,11 +54,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1616028420,
-        "narHash": "sha256-mdMOVkS7ofiQPZVC1dl7ARgf5AzQij3d0r0vWOVEmF8=",
+        "lastModified": 1616106770,
+        "narHash": "sha256-Is3w00c8NM8q/AReQI5l4AN3mn9mcTYEEU/CeG1tmZU=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "6245dd11cf59698aacdf8b153e3e7070abbef36f",
+        "rev": "f30b62a74d05e055208bea448442b9fc483e9fa5",
         "type": "github"
       },
       "original": {
@@ -70,11 +70,11 @@
     "neovim-nightly": {
       "flake": false,
       "locked": {
-        "lastModified": 1615916681,
-        "narHash": "sha256-o9CsM9VACCk1RiRimYZtqwxatth4t9EqzFQMMFjaUR4=",
+        "lastModified": 1616114982,
+        "narHash": "sha256-A/yMb0rEwJLPrPwkDgA9oEW9cIM3ntUD7KQ9Q25GuKA=",
         "owner": "neovim",
         "repo": "neovim",
-        "rev": "0ab88c2ea80caa7cda97b3a8479d0d32e4636ab6",
+        "rev": "0f7b6b2efd4270545f2080ae91ad241189e00d67",
         "type": "github"
       },
       "original": {
@@ -95,16 +95,49 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1616055137,
-        "narHash": "sha256-pEVSPu8MnqAj4xHYPZ/oKcwFkPqFKm2fMDv1nw8YA8E=",
+        "lastModified": 1616141592,
+        "narHash": "sha256-6WRyT/6/nLEg6pTAIa1RF47Ocyfaethquxt8XICepjU=",
         "owner": "nix-community",
         "repo": "neovim-nightly-overlay",
-        "rev": "b247024d70256660111942e6c51e6486487edc14",
+        "rev": "ef5b4446bf9bf64662214f9cf79e58c6f4977ae1",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
         "repo": "neovim-nightly-overlay",
+        "type": "github"
+      }
+    },
+    "neuron-notes-git": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1616168695,
+        "narHash": "sha256-htXSXBZ2uHoTRHmGCCB9GM42XjL6D3ussHvRTaJTOvY=",
+        "owner": "srid",
+        "repo": "neuron",
+        "rev": "ba894a57497b1489d706715b950ba0ea40ff1ae4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "srid",
+        "repo": "neuron",
+        "type": "github"
+      }
+    },
+    "neuron-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1615740065,
+        "narHash": "sha256-EJl3fFiCKT8HysJH6WWBRTN6+eb5RszjW1tpJcPeatI=",
+        "owner": "oberblastmeister",
+        "repo": "neuron.nvim",
+        "rev": "d45f25947a072c2016ba0b19aeff1f4edd523400",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oberblastmeister",
+        "ref": "unstable",
+        "repo": "neuron.nvim",
         "type": "github"
       }
     },
@@ -144,6 +177,8 @@
       "inputs": {
         "home-manager": "home-manager",
         "neovim-nightly-overlay": "neovim-nightly-overlay",
+        "neuron-notes-git": "neuron-notes-git",
+        "neuron-nvim": "neuron-nvim",
         "nixpkgs": "nixpkgs"
       }
     }

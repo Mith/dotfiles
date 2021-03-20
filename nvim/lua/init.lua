@@ -1,19 +1,19 @@
-require'nvim-treesitter.configs'.setup {
-    ensure_installed = "maintained",
-    highlight = {
-        enable = true
-    },
-    indent = {
-        enable = true;
-    },
-    keymaps = {
-        -- You can use the capture groups defined in textobjects.scm
-        ["af"] = "@function.outer",
-        ["if"] = "@function.inner",
-        ["ac"] = "@class.outer",
-        ["ic"] = "@class.inner",
-    }
-}
+-- require'nvim-treesitter.configs'.setup {
+--     ensure_installed = "maintained",
+--     highlight = {
+--         enable = true
+--     },
+--     indent = {
+--         enable = true;
+--     },
+--     keymaps = {
+--         -- You can use the capture groups defined in textobjects.scm
+--         ["af"] = "@function.outer",
+--         ["if"] = "@function.inner",
+--         ["ac"] = "@class.outer",
+--         ["ic"] = "@class.inner",
+--     }
+-- }
 
 local dap = require('dap')
 dap.adapters.rust = {
@@ -131,9 +131,11 @@ require'compe'.setup {
   };
 }
 
+require('nvim-web-devicons').setup{}
+
 local lualine = require('lualine')
 lualine.options = {
-    theme = 'auto',
+    theme = 'seoul256',
     section_separators = nil,
     component_separators = nil,
     icons_enabled = true,
@@ -154,15 +156,22 @@ lualine.sections = {
     lualine_z = { 'location'  },
 }
 lualine.inactive_sections = {
-    lualine_a = {  },
-    lualine_b = {  },
+    lualine_a = { 'mode' },
+    lualine_b = { 'branch' },
     lualine_c = { 'filename' },
     lualine_x = { 
+        { 'diagnostics', 
+          sources = { 'nvim_lsp' }, 
+        }, 
         'encoding', 
         { 'fileformat', icons_enabled = false },
-        'filetype' 
+        'filetype'
     },
     lualine_y = { 'progress' },
     lualine_z = { 'location'  },
 }
 lualine.status()
+
+require('neuron').setup {
+    neuron_dir = "~/notes"
+}
