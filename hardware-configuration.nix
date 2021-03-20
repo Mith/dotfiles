@@ -5,7 +5,8 @@
 
 {
   imports =
-    [ (modulesPath + "/installer/scan/not-detected.nix")
+    [
+      (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" ];
@@ -14,23 +15,25 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/259e52bc-6c98-451e-8e29-9634663bfc03";
+    {
+      device = "/dev/disk/by-uuid/259e52bc-6c98-451e-8e29-9634663bfc03";
       fsType = "ext4";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/6B87-6A80";
+    {
+      device = "/dev/disk/by-uuid/6B87-6A80";
       fsType = "vfat";
     };
 
   fileSystems."/mnt/83237877-ace2-4476-bfff-74e06ed99162" =
-    { device = "/dev/disk/by-uuid/83237877-ace2-4476-bfff-74e06ed99162";
+    {
+      device = "/dev/disk/by-uuid/83237877-ace2-4476-bfff-74e06ed99162";
       fsType = "ext4";
     };
 
   swapDevices =
-    [ { device = "/dev/disk/by-uuid/8a48019b-72fd-44ec-b8c5-6db3e775141f"; }
-    ];
+    [{ device = "/dev/disk/by-uuid/8a48019b-72fd-44ec-b8c5-6db3e775141f"; }];
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
 }

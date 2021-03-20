@@ -9,7 +9,7 @@
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
-    
+
   # Use the systemd-boot EFI boot loader.
   boot.loader = {
     systemd-boot.enable = true;
@@ -76,6 +76,11 @@
   };
 
   services.tailscale.enable = true;
+
+  services.ipfs = {
+    enable = true;
+    gatewayAddress = "/ip4/127.0.0.1/tcp/8081";
+  };
 
 
   services.geoclue2.enable = true;
@@ -145,19 +150,19 @@
   nixpkgs.config.allowUnfree = true;
 
   nix = {
-   package = pkgs.nixFlakes;
-   extraOptions = ''
-     experimental-features = nix-command flakes
-     keep-outputs = true
-     keep-derivations = true
-   '';
-   autoOptimiseStore = true;
-   gc = {
-     automatic = true;
-     dates = "daily";
-     options = "--delete-older-than 30d";
-   };
- };
+    package = pkgs.nixFlakes;
+    extraOptions = ''
+      experimental-features = nix-command flakes
+      keep-outputs = true
+      keep-derivations = true
+    '';
+    autoOptimiseStore = true;
+    gc = {
+      automatic = true;
+      dates = "daily";
+      options = "--delete-older-than 30d";
+    };
+  };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
@@ -169,9 +174,12 @@
     enable = true;
     flake = "/home/simon/src/dotfiles";
     flags = [
-      "--update-input" "nixpkgs"
-      "--update-input" "home-manager"
-      "--update-input" "neovim-nightly-overlay"
+      "--update-input"
+      "nixpkgs"
+      "--update-input"
+      "home-manager"
+      "--update-input"
+      "neovim-nightly-overlay"
     ];
   };
 

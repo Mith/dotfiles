@@ -49,7 +49,7 @@ vim.cmd [[
     command! -complete=file -nargs=* DebugRust lua require "my_debug".start_c_debugger({<f-args>}, "gdb", "rust-gdb")
 ]]
 
-local nvim_lsp = require('lspconfig')
+local lspconfig = require('lspconfig')
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
@@ -99,12 +99,28 @@ local on_attach = function(client, bufnr)
   end
 end
 
+local lspconfigs = require('lspconfig/configs')
+if not lspconfig.rnix_lsp then
+    lspconfigs.rnix_lsp = {
+        default_config = {
+            cmd = { "rnix-lsp" },
+            root_dir= function() vim.fn.getcwd() end;
+            filetypes = { "nix" },
+        }
+    };
+end
+
 -- Use a loop to conveniently both setup defined servers 
 -- and map buffer local keybindings when the language server attaches
-local servers = { "rust_analyzer", "clangd" }
+local servers = { "rust_analyzer", "rnix_lsp" }
 for _, lsp in ipairs(servers) do
-  nvim_lsp[lsp].setup { on_attach = on_attach }
+  lspconfig[lsp].setup { on_attach = on_attach }
 end
+
+lspconfig["clangd"].setup { 
+    on_attach = on_attach,
+    cmd = { "clangd", "--background-index", "--compile-commands-dir=build" }
+}
 
 local actions = require('telescope.actions')
 require('telescope').setup{
@@ -173,5 +189,5 @@ lualine.inactive_sections = {
 lualine.status()
 
 require('neuron').setup {
-    neuron_dir = "~/notes"
+    neuron_dir = "~/notes",
 }
