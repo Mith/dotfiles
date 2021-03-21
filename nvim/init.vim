@@ -65,12 +65,15 @@ set statusline+=%*
 set statusline+=%=
 set statusline+=%l\:%c\ %P
 
-command! ReloadConfig <cmd>so ~/.config/nvim/init.vim
+command! ReloadConfig <cmd>so /home/simon/.config/nvim/init.vim
 
 nnoremap <leader>f <cmd>Telescope find_files<cr>
 nnoremap <leader>g <cmd>Telescope live_grep<cr>
 nnoremap <leader>b <cmd>Telescope buffers<cr>
 nnoremap <leader>h <cmd>Telescope help_tags<cr>
+nnoremap <leader>h <cmd>Telescope help_tags<cr>
+nnoremap <leader><leader> <cmd>Telescope keymaps<cr>
+
 
 inoremap <silent><expr> <C-Space> compe#complete()
 inoremap <silent><expr> <CR>      compe#confirm('<CR>')
@@ -90,5 +93,6 @@ set completeopt=menuone,noselect
 
 " Avoid showing message extra message when using completion
 set shortmess+=c
+set shortmess-=S
 
 lua require('init')

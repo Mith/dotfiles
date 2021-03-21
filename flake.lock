@@ -67,6 +67,22 @@
         "type": "github"
       }
     },
+    "msbuild-upgrade": {
+      "locked": {
+        "lastModified": 1615311472,
+        "narHash": "sha256-+rTII1u9CYmb7qsH9xA2pf/duQ6k4q1/0WrmgPFt+Gg=",
+        "owner": "corngood",
+        "repo": "nixpkgs",
+        "rev": "092525616a476fcf955bc0645fbf90edbd7531fa",
+        "type": "github"
+      },
+      "original": {
+        "owner": "corngood",
+        "ref": "msbuild",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "naersk": {
       "inputs": {
         "nixpkgs": "nixpkgs_2"
@@ -88,11 +104,11 @@
     "neovim-nightly": {
       "flake": false,
       "locked": {
-        "lastModified": 1616114982,
-        "narHash": "sha256-A/yMb0rEwJLPrPwkDgA9oEW9cIM3ntUD7KQ9Q25GuKA=",
+        "lastModified": 1616186114,
+        "narHash": "sha256-gNh3GvcmT4mrKXJzOsdCZBt+HyKaV40Kn3HHSVAWZ/Q=",
         "owner": "neovim",
         "repo": "neovim",
-        "rev": "0f7b6b2efd4270545f2080ae91ad241189e00d67",
+        "rev": "fa4ee00fa7485a810793dfc39fc0b3f7a3b11300",
         "type": "github"
       },
       "original": {
@@ -113,11 +129,11 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1616141592,
-        "narHash": "sha256-6WRyT/6/nLEg6pTAIa1RF47Ocyfaethquxt8XICepjU=",
+        "lastModified": 1616227931,
+        "narHash": "sha256-2ieGKIrzF0x/FHoKkZWmaNS6s9rGxL36Jb1js8rXk6M=",
         "owner": "nix-community",
         "repo": "neovim-nightly-overlay",
-        "rev": "ef5b4446bf9bf64662214f9cf79e58c6f4977ae1",
+        "rev": "cb82efb321892ff8a1a0d722f2ce91e746b104c5",
         "type": "github"
       },
       "original": {
@@ -161,11 +177,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1615888535,
-        "narHash": "sha256-wR49KkuahcNq1xU3Tk+Mfbob3g2/B/fpbWPw8X+1wsg=",
+        "lastModified": 1616174264,
+        "narHash": "sha256-88Pu2xh1p2tixNxdijfqoCqq9ymkEx0d6jc7ycWavLo=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "1f77a4c8c74bbe896053994836790aa9bf6dc5ba",
+        "rev": "f5e8bdd07d1afaabf6b37afc5497b1e498b8046f",
         "type": "github"
       },
       "original": {
@@ -230,6 +246,7 @@
     "root": {
       "inputs": {
         "home-manager": "home-manager",
+        "msbuild-upgrade": "msbuild-upgrade",
         "neovim-nightly-overlay": "neovim-nightly-overlay",
         "neuron-notes-git": "neuron-notes-git",
         "neuron-nvim": "neuron-nvim",

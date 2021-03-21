@@ -49,6 +49,10 @@ vim.cmd [[
     command! -complete=file -nargs=* DebugRust lua require "my_debug".start_c_debugger({<f-args>}, "gdb", "rust-gdb")
 ]]
 
+-------------------------
+-- LSP Configuration
+-------------------------
+
 local lspconfig = require('lspconfig')
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
@@ -59,22 +63,23 @@ local on_attach = function(client, bufnr)
   -- Mappings.
   local opts = { noremap=true, silent=true }
   buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  buf_set_keymap('n', 'gd', ':Lspsaga preview_definition<CR>', opts)
+  buf_set_keymap('n', 'K', [[:Lspsaga hover_doc<CR>]], opts)
+  buf_set_keymap('n', '<C-k>', [[:Lspsaga signature_help<CR>]], opts)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   buf_set_keymap('n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
   buf_set_keymap('n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
   buf_set_keymap('n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
   buf_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  buf_set_keymap('n', '<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('n', '<leader>rn', [[:Lspsaga rename<CR>]], opts)
+  buf_set_keymap('n', '<leader>cd', ':Lspsaga show_line_diagnostics<CR>', opts)
+  buf_set_keymap('n', '<leader>cc', [[<cmd>lua require('lspsaga.diagnostic').show_cursor_diagnostics()<CR>]], opts)
+  buf_set_keymap('n', '[d', ':Lspsaga diagnostic_jump_next<CR>', opts)
+  buf_set_keymap('n', ']d', ':Lspsaga diagnostic_jump_prev<CR>', opts)
   buf_set_keymap('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-  buf_set_keymap('n', '<leader>a', '<cmd>Telescope lsp_code_actions<CR>', opts)
-  buf_set_keymap('n', '<leader>r', '<cmd>Telescope lsp_references<CR>', opts)
+  buf_set_keymap('n', '<leader>a', [[:Lspsaga code_action<CR>]], opts)
+  buf_set_keymap('v', '<leader>a', [[:<C-U>Lspsaga range_code_action<CR>]], opts)
+  buf_set_keymap('n', 'gr', [[:Lspsaga lsp_finder<CR>]], opts)
   buf_set_keymap('n', '<leader>s', '<cmd>Telescope lsp_workspace_symbols<CR>', opts)
 
   -- Set some keybinds conditional on server capabilities
@@ -110,17 +115,61 @@ if not lspconfig.rnix_lsp then
     };
 end
 
--- Use a loop to conveniently both setup defined servers 
+-- Use a loop to conveniently both setup defined servers
 -- and map buffer local keybindings when the language server attaches
-local servers = { "rust_analyzer", "rnix_lsp" }
+local servers = { "rust_analyzer", "rnix_lsp", "pyright", "bashls", "cmake", "vimls" }
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup { on_attach = on_attach }
 end
 
-lspconfig["clangd"].setup { 
+lspconfig["clangd"].setup {
     on_attach = on_attach,
     cmd = { "clangd", "--background-index", "--compile-commands-dir=build" }
 }
+
+lspconfig.omnisharp.setup {
+    cmd = { "/run/current-system/sw/bin/omnisharp", "-lsp", "--hostPID", tostring(vim.fn.getpid()) };
+}
+
+require'lspconfig'.sumneko_lua.setup {
+  cmd = {"lua-language-server"};
+  settings = {
+    Lua = {
+      runtime = {
+        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+        version = 'LuaJIT',
+        -- Setup your lua path
+        path = vim.split(package.path, ';'),
+      },
+      diagnostics = {
+        -- Get the language server to recognize the `vim` global
+        globals = {'vim'},
+      },
+      workspace = {
+        -- Make the server aware of Neovim runtime files
+        library = {
+          [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+          [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
+        },
+      },
+    },
+  },
+}
+
+local saga = require('lspsaga')
+saga.init_lsp_saga {
+    code_action_keys = {
+        quit = { '<ESC>', '<C-c>' },
+        exec = '<CR>'
+    },
+    rename_action_keys = {
+        quit = { '<ESC>', '<C-c>' },
+        exec = '<CR>'
+    }
+}
+
+-------------------------
+-- Telescope
 
 local actions = require('telescope.actions')
 require('telescope').setup{
@@ -160,11 +209,11 @@ lualine.sections = {
     lualine_a = { 'mode' },
     lualine_b = { 'branch' },
     lualine_c = { 'filename' },
-    lualine_x = { 
-        { 'diagnostics', 
-          sources = { 'nvim_lsp' }, 
-        }, 
-        'encoding', 
+    lualine_x = {
+        { 'diagnostics',
+          sources = { 'nvim_lsp' },
+        },
+        'encoding',
         { 'fileformat', icons_enabled = false },
         'filetype'
     },
@@ -175,11 +224,11 @@ lualine.inactive_sections = {
     lualine_a = { 'mode' },
     lualine_b = { 'branch' },
     lualine_c = { 'filename' },
-    lualine_x = { 
-        { 'diagnostics', 
-          sources = { 'nvim_lsp' }, 
-        }, 
-        'encoding', 
+    lualine_x = {
+        { 'diagnostics',
+          sources = { 'nvim_lsp' },
+        },
+        'encoding',
         { 'fileformat', icons_enabled = false },
         'filetype'
     },

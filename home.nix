@@ -62,12 +62,20 @@
       auto-session
       pkgs.neuron-nvim
       pkgs.parinfer-rust
+      lspsaga-nvim
     ];
 
     extraPackages = with pkgs; [
       rust-analyzer
       clang-tools
       rnix-lsp
+      omnisharp-roslyn
+      nodePackages.pyright
+      nodePackages.bash-language-server
+      nodePackages.vim-language-server
+      cmake-language-server
+      nixpkgs-fmt
+      sumneko-lua-language-server
     ];
 
     extraConfig = builtins.readFile ./nvim/init.vim;

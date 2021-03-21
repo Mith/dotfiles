@@ -112,6 +112,7 @@
     gnome3.pomodoro
     taskwarrior
     timewarrior
+    omnisharp-roslyn
     gnomeExtensions.dash-to-dock
     gnomeExtensions.appindicator
     gnomeExtensions.impatience
