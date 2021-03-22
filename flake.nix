@@ -14,12 +14,21 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     msbuild-upgrade.url = "github:corngood/nixpkgs/msbuild";
+    tree-sitter-with-plugins.url = "github:jlesquembre/nixpkgs/tree-sitter-with-plugins";
     neuron-notes-git = {
       url = "github:srid/neuron";
       flake = false;
     };
     neuron-nvim = {
       url = "github:oberblastmeister/neuron.nvim/unstable";
+      flake = false;
+    };
+    sonokai = {
+      url = "github:sainnhe/sonokai";
+      flake = false;
+    };
+    melange = {
+      url = "github:savq/melange";
       flake = false;
     };
   };
@@ -43,9 +52,22 @@
                 src = inputs.neuron-nvim;
                 dontBuild = true;
               };
-
+              sonokai = prev.vimUtils.buildVimPlugin {
+                name = "sonokai";
+                src = inputs.sonokai;
+                dontBuild = true;
+              };
+              melange = prev.vimUtils.buildVimPlugin{
+                name = "melange";
+                src = inputs.melange;
+                dontBuild = true;
+              };
               rnix-lsp = inputs.rnix-lsp.defaultPackage."${final.system}";
               msbuild = (import inputs.msbuild-upgrade { system = "x86_64-linux"; }).msbuild;
+              # tree-sitter = (import inputs.tree-sitter-with-plugins { system = "x86_64-linux"; }).tree-sitter;
+              # vimPlugins = prev.vimPlugins.override {
+                # nvim-treesitter = (import inputs.tree-sitter-with-plugins { system = "x86_64-linux"; }).vimPlugins.nvim-treesitter;
+              # };
               omnisharp-roslyn = prev.omnisharp-roslyn.overrideAttrs (oldAttrs: rec {
                 version = "1.37.7";
                 src = prev.fetchurl {

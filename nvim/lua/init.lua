@@ -1,19 +1,18 @@
--- require'nvim-treesitter.configs'.setup {
---     ensure_installed = "maintained",
---     highlight = {
---         enable = true
---     },
---     indent = {
---         enable = true;
---     },
---     keymaps = {
---         -- You can use the capture groups defined in textobjects.scm
---         ["af"] = "@function.outer",
---         ["if"] = "@function.inner",
---         ["ac"] = "@class.outer",
---         ["ic"] = "@class.inner",
---     }
--- }
+require'nvim-treesitter.configs'.setup {
+    highlight = {
+        enable = true
+    },
+    indent = {
+        enable = true;
+    },
+    keymaps = {
+        -- You can use the capture groups defined in textobjects.scm
+        ["af"] = "@function.outer",
+        ["if"] = "@function.inner",
+        ["ac"] = "@class.outer",
+        ["ic"] = "@class.inner",
+    }
+}
 
 local dap = require('dap')
 dap.adapters.rust = {
@@ -56,10 +55,6 @@ vim.cmd [[
 local lspconfig = require('lspconfig')
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
-  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
   -- Mappings.
   local opts = { noremap=true, silent=true }
   buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
@@ -115,11 +110,17 @@ if not lspconfig.rnix_lsp then
     };
 end
 
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+
 -- Use a loop to conveniently both setup defined servers
 -- and map buffer local keybindings when the language server attaches
 local servers = { "rust_analyzer", "rnix_lsp", "pyright", "bashls", "cmake", "vimls" }
 for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup { on_attach = on_attach }
+  lspconfig[lsp].setup {
+      on_attach = on_attach,
+      capabilities = capabilities
+  }
 end
 
 lspconfig["clangd"].setup {
@@ -168,6 +169,58 @@ saga.init_lsp_saga {
     }
 }
 
+require'compe'.setup {
+  enabled = true;
+  source = {
+    path = true;
+    buffer = true;
+    nvim_lsp = true;
+    nvim_lua = true;
+    nvim_treesitter = true;
+  };
+}
+
+local t = function(str)
+  return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+
+local check_back_space = function()
+    local col = vim.fn.col('.') - 1
+    if col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
+        return true
+    else
+        return false
+    end
+end
+
+-- Use (s-)tab to:
+--- move to prev/next item in completion menuone
+--- jump to prev/next snippet's placeholder
+_G.tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return t "<C-n>"
+  elseif vim.fn.call("vsnip#available", {1}) == 1 then
+    return t "<Plug>(vsnip-expand-or-jump)"
+  elseif check_back_space() then
+    return t "<Tab>"
+  else
+    return vim.fn['compe#complete']()
+  end
+end
+_G.s_tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return t "<C-p>"
+  elseif vim.fn.call("vsnip#jumpable", {-1}) == 1 then
+    return t "<Plug>(vsnip-jump-prev)"
+  else
+    return t "<S-Tab>"
+  end
+end
+
+vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
 -------------------------
 -- Telescope
 
@@ -185,16 +238,6 @@ require('telescope').setup{
 require('telescope').load_extension('fzy_native')
 require('telescope').load_extension('frecency')
 
-require'compe'.setup {
-  enabled = true;
-  source = {
-    path = true;
-    buffer = true;
-    nvim_lsp = true;
-    nvim_lua = true;
-    nvim_treesitter = true;
-  };
-}
 
 require('nvim-web-devicons').setup{}
 
@@ -213,9 +256,6 @@ lualine.sections = {
         { 'diagnostics',
           sources = { 'nvim_lsp' },
         },
-        'encoding',
-        { 'fileformat', icons_enabled = false },
-        'filetype'
     },
     lualine_y = { 'progress' },
     lualine_z = { 'location'  },
@@ -228,15 +268,14 @@ lualine.inactive_sections = {
         { 'diagnostics',
           sources = { 'nvim_lsp' },
         },
-        'encoding',
-        { 'fileformat', icons_enabled = false },
-        'filetype'
     },
     lualine_y = { 'progress' },
     lualine_z = { 'location'  },
 }
 lualine.status()
 
-require('neuron').setup {
-    neuron_dir = "~/notes",
-}
+-- require('neuron').setup {
+--     neuron_dir = "~/notes",
+-- }
+-- local neogit = require("neogit")
+-- neogit.setup {}

@@ -17,6 +17,7 @@
     neuron-notes
     brig
     bitwarden-cli
+    vlc
 
     swaylock
     swayidle
@@ -48,21 +49,26 @@
       telescope-fzy-native-nvim
       telescope-frecency-nvim
       sql-nvim
-      # nvim-treesitter lib mismatch
-      # nvim-treesitter-textobjects
+      nvim-treesitter
+      nvim-treesitter-textobjects
       nvim-dap
       nvim-dap-virtual-text
       plenary-nvim
       popup-nvim
       nvim-lspconfig
       nvim-compe
+      vim-vsnip
       lsp-status-nvim
       nvim-web-devicons
       lualine-nvim
       auto-session
-      pkgs.neuron-nvim
+      # pkgs.neuron-nvim
       pkgs.parinfer-rust
       lspsaga-nvim
+      neogit
+      nvcode-color-schemes-vim
+      pkgs.sonokai
+      pkgs.melange
     ];
 
     extraPackages = with pkgs; [
@@ -76,10 +82,14 @@
       cmake-language-server
       nixpkgs-fmt
       sumneko-lua-language-server
+      tree-sitter
     ];
 
     extraConfig = builtins.readFile ./nvim/init.vim;
   };
+
+  xdg.configFile."nvim/parser/c.so".source = "${pkgs.tree-sitter.builtGrammars.tree-sitter-c}/parser";
+  xdg.configFile."nvim/parser/rust.so".source = "${pkgs.tree-sitter.builtGrammars.tree-sitter-rust}/parser";
 
   xdg.configFile."nvim/lua".source = nvim/lua;
 

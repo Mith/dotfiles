@@ -59,12 +59,6 @@ endif
 map <SPACE> <Leader>
 map <SPACE><SPACE> <Leader><Leader>
 
-set statusline=%f\ %m%r%y
-set statusline+=%#warningmsg#
-set statusline+=%*
-set statusline+=%=
-set statusline+=%l\:%c\ %P
-
 command! ReloadConfig <cmd>so /home/simon/.config/nvim/init.vim
 
 nnoremap <leader>f <cmd>Telescope find_files<cr>

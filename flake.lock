@@ -54,16 +54,32 @@
         ]
       },
       "locked": {
-        "lastModified": 1616106770,
-        "narHash": "sha256-Is3w00c8NM8q/AReQI5l4AN3mn9mcTYEEU/CeG1tmZU=",
+        "lastModified": 1616318638,
+        "narHash": "sha256-E6ABXtzw6bHmrIirB1sJL6S2MEa3sfcvRLzRa92frCo=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "f30b62a74d05e055208bea448442b9fc483e9fa5",
+        "rev": "ddcd476603dfd3388b1dc8234fa9d550156a51f5",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
         "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "melange": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1616094327,
+        "narHash": "sha256-srRx2f54B9kXC4E364ntAlh4rfvpRMor3HbT+hsTMFs=",
+        "owner": "savq",
+        "repo": "melange",
+        "rev": "73802b7a846771f4ebba922357bafccaeb34537f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "savq",
+        "repo": "melange",
         "type": "github"
       }
     },
@@ -104,11 +120,11 @@
     "neovim-nightly": {
       "flake": false,
       "locked": {
-        "lastModified": 1616186114,
-        "narHash": "sha256-gNh3GvcmT4mrKXJzOsdCZBt+HyKaV40Kn3HHSVAWZ/Q=",
+        "lastModified": 1616342646,
+        "narHash": "sha256-rWLubr/XtEWSWUZbcg5lxp3DGjWwc67DwSi0lOeHV+Y=",
         "owner": "neovim",
         "repo": "neovim",
-        "rev": "fa4ee00fa7485a810793dfc39fc0b3f7a3b11300",
+        "rev": "070e084a64dd08ff28c826843f0d61ca51837841",
         "type": "github"
       },
       "original": {
@@ -129,11 +145,11 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1616227931,
-        "narHash": "sha256-2ieGKIrzF0x/FHoKkZWmaNS6s9rGxL36Jb1js8rXk6M=",
+        "lastModified": 1616401070,
+        "narHash": "sha256-iqpjIKhxDRIGwLjv4DiX/ARcDEUNKLGb/fy0B8leW6U=",
         "owner": "nix-community",
         "repo": "neovim-nightly-overlay",
-        "rev": "cb82efb321892ff8a1a0d722f2ce91e746b104c5",
+        "rev": "5e3737ae3243e2e206360d39131d5eb6f65ecff5",
         "type": "github"
       },
       "original": {
@@ -145,11 +161,11 @@
     "neuron-notes-git": {
       "flake": false,
       "locked": {
-        "lastModified": 1616168695,
-        "narHash": "sha256-htXSXBZ2uHoTRHmGCCB9GM42XjL6D3ussHvRTaJTOvY=",
+        "lastModified": 1616202152,
+        "narHash": "sha256-ffndUYhug0skb0wKFnQtJlaijBkUP2ek7Hy80ET5sQQ=",
         "owner": "srid",
         "repo": "neuron",
-        "rev": "ba894a57497b1489d706715b950ba0ea40ff1ae4",
+        "rev": "6917658af7f6aeb0848cd4ccc07af57c619b536f",
         "type": "github"
       },
       "original": {
@@ -161,11 +177,11 @@
     "neuron-nvim": {
       "flake": false,
       "locked": {
-        "lastModified": 1615740065,
-        "narHash": "sha256-EJl3fFiCKT8HysJH6WWBRTN6+eb5RszjW1tpJcPeatI=",
+        "lastModified": 1616422889,
+        "narHash": "sha256-ThwhwqCESewiRHGlfihqxpufUOfo5LVC+A/lcETAgbk=",
         "owner": "oberblastmeister",
         "repo": "neuron.nvim",
-        "rev": "d45f25947a072c2016ba0b19aeff1f4edd523400",
+        "rev": "6563229e9cb3105243ea645f4224003cece8623d",
         "type": "github"
       },
       "original": {
@@ -246,12 +262,47 @@
     "root": {
       "inputs": {
         "home-manager": "home-manager",
+        "melange": "melange",
         "msbuild-upgrade": "msbuild-upgrade",
         "neovim-nightly-overlay": "neovim-nightly-overlay",
         "neuron-notes-git": "neuron-notes-git",
         "neuron-nvim": "neuron-nvim",
         "nixpkgs": "nixpkgs",
-        "rnix-lsp": "rnix-lsp"
+        "rnix-lsp": "rnix-lsp",
+        "sonokai": "sonokai",
+        "tree-sitter-with-plugins": "tree-sitter-with-plugins"
+      }
+    },
+    "sonokai": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1616406970,
+        "narHash": "sha256-YMeW9dYJKBwcCX4yyHwpmAsiqmv+Ma6uTE2Rg/K/9mo=",
+        "owner": "sainnhe",
+        "repo": "sonokai",
+        "rev": "78f1b14ad18b043eb888a173f4c431dbf79462d8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sainnhe",
+        "repo": "sonokai",
+        "type": "github"
+      }
+    },
+    "tree-sitter-with-plugins": {
+      "locked": {
+        "lastModified": 1615930095,
+        "narHash": "sha256-GJ1UEtws6w1UKyLwDty9+0cC8+10wjCKTCIZHtuVD0c=",
+        "owner": "jlesquembre",
+        "repo": "nixpkgs",
+        "rev": "6987c8f707b6ff4e65b973000b5e195ad006d293",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jlesquembre",
+        "ref": "tree-sitter-with-plugins",
+        "repo": "nixpkgs",
+        "type": "github"
       }
     },
     "utils": {

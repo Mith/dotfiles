@@ -126,6 +126,8 @@
     gnomeExtensions.window-is-ready-remover
     gnomeExtensions.freon
     gnomeExtensions.system-monitor
+    vlc
+    gnome3.eog
   ];
 
   hardware.opengl = {
