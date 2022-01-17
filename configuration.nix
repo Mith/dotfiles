@@ -16,13 +16,12 @@
     efi.canTouchEfiVariables = true;
   };
 
-  boot.plymouth.enable = true;
-
   hardware.cpu.intel.updateMicrocode = true;
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
   boot.kernelParams = [ "zswap.enabled=1" ];
   boot.supportedFilesystems = [ "ntfs" ];
+  boot.kernel.sysctl."kernel.perf_event_paranoid" = 1; # required for rr recording
 
   networking.hostName = "simon-nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -35,6 +34,14 @@
   # replicates the default behaviour.
   networking.useDHCP = false;
   networking.interfaces.enp0s31f6.useDHCP = true;
+
+  # networking.wg-quick.interfaces = {
+  #   wg-mullvad = {
+  #     privateKey = "9XTJw9kAESd/0QWnFmgNcb94katEP1rozpzNCTWmKXc=";
+  #     address = ["10.65.135.46/32" "fc00:bbbb:bbbb:bb01::2:872d/128"];
+  #     dns = ["193.138.218.74"];
+  #   };
+  # };
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -54,15 +61,24 @@
     layout = "us";
     xkbVariant = "dvorak";
     displayManager.gdm.enable = true;
-    desktopManager.gnome3.enable = true;
+    # displayManager.sddm.enable = true;
+    # displayManager.defaultSession = "sway";
+    desktopManager.gnome.enable = true;
+    libinput = {
+      enable = true;
+      mouse.accelProfile = "flat";
+    };
   };
-
   # Enable CUPS to print documents.
   # services.printing.enable = true;
+
+  services.ratbagd.enable = true;
 
   sound.enable = true;
 
   hardware.pulseaudio.enable = false;
+  # hardware.pulseaudio.support32Bit = true;
+
 
   security.rtkit.enable = true;
   services.pipewire = {
@@ -74,22 +90,25 @@
     jack.enable = true;
     pulse.enable = true;
   };
+  programs.noisetorch.enable = true;
 
   services.tailscale.enable = true;
 
-  services.ipfs = {
-    enable = true;
-    gatewayAddress = "/ip4/127.0.0.1/tcp/8081";
-  };
+  # services.geoclue2.enable = true;
 
+  # services.zerotierone = {
+  #   enable = true;
+  #   joinNetworks = [ "a84ac5c10a9eafe2" ];
+  # };
 
-  services.geoclue2.enable = true;
+  services.flatpak.enable = true;
+  services.fwupd.enable = true;
+  programs.fish.enable = true;
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.simon = {
     shell = pkgs.fish;
     isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "audio" "docker"];
 
   };
 
@@ -109,25 +128,22 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     gnome3.gnome-tweak-tool
-    gnome3.pomodoro
     taskwarrior
     timewarrior
-    omnisharp-roslyn
     gnomeExtensions.dash-to-dock
     gnomeExtensions.appindicator
     gnomeExtensions.impatience
-    gnomeExtensions.workspace-matrix
     gnomeExtensions.clipboard-indicator
-    gnomeExtensions.remove-dropdown-arrows
-    gnomeExtensions.taskwhisperer
     gnomeExtensions.gsconnect
-    gnomeExtensions.tilingnome
-    gnomeExtensions.dynamic-panel-transparency
     gnomeExtensions.window-is-ready-remover
-    gnomeExtensions.freon
-    gnomeExtensions.system-monitor
-    vlc
-    gnome3.eog
+    gnomeExtensions.tiling-assistant
+    gnomeExtensions.just-perfection
+    gnomeExtensions.pop-shell
+    pavucontrol
+    vulkan-loader
+    piper
+    podman-compose
+    docker-compose
   ];
 
   hardware.opengl = {
@@ -135,25 +151,59 @@
     driSupport32Bit = true;
   };
 
-  fonts.fonts = with pkgs; [
-    corefonts
-    noto-fonts
-    noto-fonts-cjk
-    noto-fonts-emoji
-  ];
+  # hardware.opengl.extraPackages32 = with pkgs.pkgsi686Linux;
+  #   [ libva ]
+  #   ++ lib.optionals config.services.pipewire.enable [ pipewire ];
 
-  virtualisation.podman.enable = true;
+  fonts = {
+    fontDir.enable = true;
+    fonts = with pkgs; [
+      corefonts
+      noto-fonts
+      noto-fonts-cjk
+      noto-fonts-emoji
+      (nerdfonts.override { fonts = [ "FiraCode" ]; })
+    ];
+  };
+
+  # virtualisation.podman.enable = true;
+  virtualisation.docker.enable = true;
 
   programs.steam.enable = true;
-  programs.sway = {
-    enable = true;
-    wrapperFeatures.gtk = true;
-  };
+  programs.corectrl.enable = true;
+  # programs.gamemode.enable = true;
+  # programs.sway = {
+  #   enable = true;
+  #   wrapperFeatures.gtk = true;
+  #   extraSessionCommands = ''
+  #     export MOZ_ENABLE_WAYLAND=1
+  #   '';
+  # };
+
+  # systemd.user.targets.sway-session = {
+  #   description = "Sway compositor session";
+  #   documentation = [ "man:systemd.special(7)" ];
+  #   bindsTo = [ "graphical-session.target" ];
+  #   wants = [ "graphical-session-pre.target" ];
+  #   after = [ "graphical-session-pre.target" ];
+  # };
+
+  # xdg = {
+  #   portal = {
+  #     enable = true;
+  #     extraPortals = with pkgs; [
+  #       xdg-desktop-portal-wlr
+  #       xdg-desktop-portal-gtk
+  #     ];
+  #     gtkUsePortal = true;
+  #   };
+  # };
+
 
   nixpkgs.config.allowUnfree = true;
 
   nix = {
-    package = pkgs.nixFlakes;
+    package = pkgs.nixUnstable;
     extraOptions = ''
       experimental-features = nix-command flakes
       keep-outputs = true
@@ -163,15 +213,22 @@
     gc = {
       automatic = true;
       dates = "daily";
-      options = "--delete-older-than 30d";
+      options = "--delete-older-than 10d";
     };
   };
 
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
+  networking.firewall.allowedUDPPorts = [
+    34197 # Factorio
+  ];
+
+  networking.firewall.allowedTCPPortRanges = [
+    { from = 1714; to = 1764; } # KDE Connect
+  ];
+  networking.firewall.allowedUDPPortRanges = [
+    { from = 1714; to = 1764; } # KDE Connect
+  ];
+  networking.enableIPv6 = false;
 
   system.autoUpgrade = {
     enable = true;

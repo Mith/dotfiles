@@ -10,9 +10,14 @@
     ];
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" ];
-  boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-intel" ];
+  boot.initrd.kernelModules = [ "amdgpu" ];
+  boot.kernelModules = [ "kvm-intel" "coretemp" "nct6775" ];
   boot.extraModulePackages = [ ];
+
+  hardware.opengl.extraPackages = with pkgs; [
+    rocm-opencl-icd
+    rocm-opencl-runtime
+  ];
 
   fileSystems."/" =
     {
@@ -26,14 +31,14 @@
       fsType = "vfat";
     };
 
-  fileSystems."/mnt/83237877-ace2-4476-bfff-74e06ed99162" =
+  fileSystems."/mnt/biggerdata" = 
     {
-      device = "/dev/disk/by-uuid/83237877-ace2-4476-bfff-74e06ed99162";
+      device = "/dev/disk/by-uuid/5f92d69e-2264-43b7-a2f1-fe7703cd350d";
       fsType = "ext4";
     };
 
   swapDevices =
     [{ device = "/dev/disk/by-uuid/8a48019b-72fd-44ec-b8c5-6db3e775141f"; }];
 
-  powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
+  powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
 }
